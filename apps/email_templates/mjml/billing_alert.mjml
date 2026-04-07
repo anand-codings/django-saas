@@ -1,0 +1,38 @@
+{# Billing alert email (payment failure, trial ending, usage limit). #}
+{# Variables: alert_type (payment_failed|trial_ending|usage_limit), customer_name, #}
+{#            detail_message, action_url, action_label, unsubscribe_url, site_name, site_address #}
+{% extends "mjml/_base.mjml" %}
+
+{% block email_body %}
+  {# Color-coded icon strip by alert type #}
+  <mj-section background-color="{% if alert_type == 'payment_failed' %}#fef2f2{% elif alert_type == 'trial_ending' %}#fffbeb{% else %}#eff6ff{% endif %}"
+              border-radius="8px" padding="16px" margin-bottom="24px">
+    <mj-column>
+      <mj-text align="center" font-size="28px" padding="0">
+        {% if alert_type == "payment_failed" %}⚠️
+        {% elif alert_type == "trial_ending" %}⏳
+        {% else %}📊{% endif %}
+      </mj-text>
+    </mj-column>
+  </mj-section>
+
+  <mj-text>
+    <h1 style="margin:0 0 12px;font-size:22px;font-weight:700;color:#111827;">
+      {% if alert_type == "payment_failed" %}Payment failed
+      {% elif alert_type == "trial_ending" %}Your trial is ending soon
+      {% else %}You're approaching your usage limit
+      {% endif %}
+    </h1>
+    <p style="margin:0;">{{ detail_message }}</p>
+  </mj-text>
+
+  <mj-button href="{{ action_url }}" align="left" margin="24px 0 0"
+             background-color="{% if alert_type == 'payment_failed' %}#dc2626{% else %}#0284c7{% endif %}">
+    {{ action_label }} →
+  </mj-button>
+
+  <mj-text padding-top="20px" font-size="13px" color="#6b7280">
+    Need help? Reply to this email or visit our
+    <a href="{{ site_url }}/support/">support page</a>.
+  </mj-text>
+{% endblock %}

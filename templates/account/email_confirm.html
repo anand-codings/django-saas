@@ -1,0 +1,41 @@
+{% extends "account/_auth_base.html" %}
+
+{% block title %}Confirm email{% endblock %}
+
+{% block card_content %}
+  <div class="text-center">
+    <div class="w-14 h-14 rounded-full bg-brand-50 flex items-center justify-center mx-auto mb-5">
+      <svg class="w-7 h-7 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+    </div>
+    <h2 class="text-2xl font-bold text-gray-900 mb-2">Confirm your email</h2>
+
+    {% if confirmation %}
+      <p class="text-sm text-gray-500 mb-6">
+        Please confirm that
+        <strong class="text-gray-800">{{ confirmation.email_address.email }}</strong>
+        is your email address.
+      </p>
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit"
+                class="w-full flex justify-center py-2.5 px-4 rounded-lg shadow-sm text-sm font-semibold
+                       text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2
+                       focus:ring-offset-2 focus:ring-brand-600 transition-colors">
+          Confirm email address
+        </button>
+      </form>
+    {% else %}
+      <div class="rounded-lg bg-red-50 border border-red-200 px-4 py-4 mt-2">
+        <p class="text-sm text-red-700">
+          This confirmation link is invalid or has expired.
+          <a href="{% url 'account_email' %}" class="underline font-medium">
+            Request a new one
+          </a>.
+        </p>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

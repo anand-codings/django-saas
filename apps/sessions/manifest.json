@@ -1,0 +1,38 @@
+{
+  "name": "django-saas/sessions",
+  "display_name": "Sessions",
+  "framework": "django",
+  "language": "python",
+  "description": "Sessions app for django-saas (Business layer)",
+  "tags": [
+    "django",
+    "business",
+    "api",
+    "celery",
+    "admin"
+  ],
+  "dependencies": {
+    "shared": "*"
+  },
+  "entry_point": "views.py",
+  "file_list": [
+    "README.md",
+    "__init__.py",
+    "admin.py",
+    "api.py",
+    "apps.py",
+    "models.py",
+    "serializers.py",
+    "signals.py",
+    "tasks.py",
+    "urls.py",
+    "views.py",
+    "management/__init__.py",
+    "tests/__init__.py",
+    "tests/test_models.py",
+    "tests/test_views.py"
+  ],
+  "use_cases": [
+    "Sessions functionality"
+  ]
+}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Access Denied{% endblock %}
+{% block meta_description %}You don't have permission to view this page.{% endblock %}
+
+{% block content %}
+<div class="flex flex-col items-center justify-center py-24 text-center">
+  <div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mb-6">
+    <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+    </svg>
+  </div>
+  <p class="text-8xl font-black text-gray-200 select-none -mt-4">403</p>
+  <h1 class="mt-2 text-3xl font-bold text-gray-900">Access denied</h1>
+  <p class="mt-3 text-gray-500 max-w-sm">
+    You don't have permission to view this page.
+    {% if not user.is_authenticated %}
+      Please sign in to continue.
+    {% endif %}
+  </p>
+  <div class="mt-8 flex flex-wrap gap-3 justify-center">
+    {% if not user.is_authenticated %}
+      <a href="/accounts/login/?next={{ request.path|urlencode }}"
+         class="bg-brand-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-brand-700 transition-colors">
+        Sign in
+      </a>
+    {% endif %}
+    <a href="/"
+       class="border border-gray-300 text-gray-700 px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
+      Go home
+    </a>
+  </div>
+</div>
+{% endblock %}

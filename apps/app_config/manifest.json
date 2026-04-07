@@ -1,0 +1,38 @@
+{
+  "name": "django-saas/app_config",
+  "display_name": "App Config",
+  "framework": "django",
+  "language": "python",
+  "description": "App Config app for django-saas (Foundation layer)",
+  "tags": [
+    "django",
+    "foundation",
+    "api",
+    "celery",
+    "admin"
+  ],
+  "dependencies": {
+    "shared": "*"
+  },
+  "entry_point": "views.py",
+  "file_list": [
+    "README.md",
+    "__init__.py",
+    "admin.py",
+    "api.py",
+    "apps.py",
+    "models.py",
+    "serializers.py",
+    "signals.py",
+    "tasks.py",
+    "urls.py",
+    "views.py",
+    "management/__init__.py",
+    "tests/__init__.py",
+    "tests/test_models.py",
+    "tests/test_views.py"
+  ],
+  "use_cases": [
+    "App Config functionality"
+  ]
+}

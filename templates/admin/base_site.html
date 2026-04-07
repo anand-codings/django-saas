@@ -1,0 +1,16 @@
+{% extends "unfold/base.html" %}
+{# Overrides the unfold admin base to inject branding and custom header styles. #}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | Django SaaS Admin{% endblock %}
+
+{% block branding %}
+  <div id="site-name" class="flex items-center gap-2 font-semibold text-white">
+    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+    </svg>
+    Django SaaS
+    <span class="ml-2 text-xs font-normal opacity-60 tracking-wide uppercase">Admin</span>
+  </div>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

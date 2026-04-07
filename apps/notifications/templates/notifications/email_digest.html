@@ -1,0 +1,47 @@
+{% extends "emails/_base.html" %}
+{# Weekly/daily digest email — groups recent notifications by category.       #}
+{# Variables: recipient, period_label, notification_groups (list of           #}
+{#   {category, label, icon, items: [{title, body, action_url, created_at}]}  #}
+{#   ), unsubscribe_url, site_url, site_name, site_address                    #}
+
+{% block subject %}Your {{ period_label }} digest — {{ notification_groups|length }} update{{ notification_groups|length|pluralize }}{% endblock %}
+
+{% block email_body %}
+  <h1>Your {{ period_label }} digest</h1>
+  <p style="color:#6b7280;font-size:13px;margin-bottom:8px;">
+    Here's what happened while you were away, {{ recipient.first_name|default:recipient.email }}.
+  </p>
+
+  {% for group in notification_groups %}
+    <div style="margin-top:28px;">
+      <p style="margin:0 0 12px;font-size:12px;font-weight:600;color:#6b7280;
+                text-transform:uppercase;letter-spacing:0.05em;">
+        {{ group.icon }} {{ group.label }}
+      </p>
+
+      {% for item in group.items %}
+        <div style="border-left:3px solid #e5e7eb;padding:10px 0 10px 16px;margin-bottom:10px;">
+          <p style="margin:0 0 4px;font-weight:600;font-size:14px;color:#111827;">
+            {% if item.action_url %}
+              <a href="{{ item.action_url }}" style="color:#111827;text-decoration:none;">
+                {{ item.title }}
+              </a>
+            {% else %}
+              {{ item.title }}
+            {% endif %}
+          </p>
+          <p style="margin:0;font-size:13px;color:#6b7280;">{{ item.body }}</p>
+          <p style="margin:4px 0 0;font-size:11px;color:#9ca3af;">{{ item.created_at }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  {% empty %}
+    <p style="color:#6b7280;font-style:italic;">No new notifications this period.</p>
+  {% endfor %}
+
+  <hr class="divider" style="margin-top:32px;" />
+  <p style="font-size:12px;color:#9ca3af;margin:0;">
+    Manage your notification preferences in
+    <a href="{{ site_url }}/settings/notifications/" style="color:#9ca3af;">account settings</a>.
+  </p>
+{% endblock %}

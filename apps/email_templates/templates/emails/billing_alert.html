@@ -1,0 +1,36 @@
+{% extends "emails/_base.html" %}
+
+{% block subject %}
+  {% if alert_type == "payment_failed" %}Action required: payment failed
+  {% elif alert_type == "trial_ending" %}Your trial ends soon
+  {% else %}You're approaching your usage limit
+  {% endif %}
+{% endblock %}
+
+{% block email_body %}
+  <div style="background:{% if alert_type == 'payment_failed' %}#fef2f2{% elif alert_type == 'trial_ending' %}#fffbeb{% else %}#eff6ff{% endif %};
+              border-radius:8px;padding:16px;text-align:center;margin-bottom:24px;font-size:28px;">
+    {% if alert_type == "payment_failed" %}⚠️
+    {% elif alert_type == "trial_ending" %}⏳
+    {% else %}📊{% endif %}
+  </div>
+
+  <h1>
+    {% if alert_type == "payment_failed" %}Payment failed
+    {% elif alert_type == "trial_ending" %}Your trial is ending soon
+    {% else %}You're approaching your usage limit
+    {% endif %}
+  </h1>
+  <p>{{ detail_message }}</p>
+
+  <a href="{{ action_url }}" class="btn"
+     style="background:{% if alert_type == 'payment_failed' %}#dc2626{% else %}#0284c7{% endif %};">
+    {{ action_label }} &rarr;
+  </a>
+
+  <hr class="divider" />
+  <p style="font-size:13px;color:#6b7280;margin:0;">
+    Need help? Reply to this email or visit our
+    <a href="{{ site_url }}/support/">support page</a>.
+  </p>
+{% endblock %}

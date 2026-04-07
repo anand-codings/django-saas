@@ -1,0 +1,40 @@
+{# Slack Block Kit payload — rendered and POSTed to a Slack incoming webhook. #}
+{# Variables: title, body, action_url, action_label, severity               #}
+{#   (info|warning|error|success), actor_name, site_url                      #}
+{
+  "blocks": [
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "*{{ title|escapejs }}*\n{{ body|escapejs }}"
+      }{% if severity == "error" or severity == "warning" %},
+      "accessory": {
+        "type": "image",
+        "image_url": "{{ site_url }}/static/img/icons/{{ severity }}.png",
+        "alt_text": "{{ severity }}"
+      }{% endif %}
+    }{% if action_url %},
+    {
+      "type": "actions",
+      "elements": [
+        {
+          "type": "button",
+          "text": { "type": "plain_text", "text": "{{ action_label|default:'View details'|escapejs }}" },
+          "url": "{{ action_url|escapejs }}"{% if severity == "error" %},
+          "style": "danger"{% elif severity == "success" %},
+          "style": "primary"{% endif %}
+        }
+      ]
+    }{% endif %},
+    {
+      "type": "context",
+      "elements": [
+        {
+          "type": "mrkdwn",
+          "text": "{% if actor_name %}Triggered by *{{ actor_name|escapejs }}* · {% endif %}via <{{ site_url }}|Django SaaS>"
+        }
+      ]
+    }
+  ]
+}

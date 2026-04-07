@@ -1,0 +1,42 @@
+{
+  "name": "django-saas/api",
+  "display_name": "Api",
+  "framework": "django",
+  "language": "python",
+  "description": "Api app for django-saas (Infrastructure layer)",
+  "tags": [
+    "django",
+    "infrastructure",
+    "api",
+    "celery",
+    "admin"
+  ],
+  "dependencies": {
+    "shared": "*"
+  },
+  "entry_point": "views.py",
+  "file_list": [
+    "README.md",
+    "__init__.py",
+    "admin.py",
+    "api.py",
+    "apps.py",
+    "exceptions.py",
+    "models.py",
+    "pagination.py",
+    "serializers.py",
+    "signals.py",
+    "tasks.py",
+    "throttling.py",
+    "urls.py",
+    "versioning.py",
+    "views.py",
+    "management/__init__.py",
+    "tests/__init__.py",
+    "tests/test_models.py",
+    "tests/test_views.py"
+  ],
+  "use_cases": [
+    "Api functionality"
+  ]
+}

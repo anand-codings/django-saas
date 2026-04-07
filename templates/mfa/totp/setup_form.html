@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Set up two-factor authentication{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto">
+  <div class="mb-8">
+    <h1 class="text-2xl font-bold text-gray-900">Set up authenticator app</h1>
+    <p class="mt-2 text-gray-500 text-sm">
+      Scan the QR code below with your authenticator app
+      (Google Authenticator, Authy, 1Password, etc.), then enter the code it generates.
+    </p>
+  </div>
+
+  <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6">
+    {# Step 1: QR code #}
+    <div>
+      <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">
+        Step 1 — Scan QR code
+      </h2>
+      <div class="flex justify-center">
+        {{ totp_svg|safe }}
+      </div>
+      <details class="mt-3">
+        <summary class="text-xs text-gray-500 cursor-pointer hover:text-gray-700">
+          Can't scan? Enter key manually
+        </summary>
+        <code class="mt-2 block text-xs font-mono bg-gray-50 border border-gray-200 rounded px-3 py-2
+                     text-gray-700 break-all select-all">{{ totp_secret }}</code>
+      </details>
+    </div>
+
+    <hr class="border-gray-100" />
+
+    {# Step 2: Verify code #}
+    <div>
+      <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">
+        Step 2 — Verify the code
+      </h2>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <label for="id_code" class="block text-sm font-medium text-gray-700 mb-1">
+          6-digit code from your app
+        </label>
+        <input id="id_code" name="code" type="text" inputmode="numeric" pattern="\d{6}"
+               autocomplete="one-time-code" maxlength="6" autofocus required
+               class="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-center
+                      tracking-[0.5em] font-mono placeholder-gray-400 focus:outline-none
+                      focus:ring-2 focus:ring-brand-600 focus:border-transparent
+                      {% if form.code.errors %}border-red-400{% endif %}"
+               placeholder="000000" />
+        {% for error in form.code.errors %}
+          <p class="mt-1 text-xs text-red-600">{{ error }}</p>
+        {% endfor %}
+
+        <button type="submit"
+                class="mt-4 w-full flex justify-center py-2.5 px-4 rounded-lg shadow-sm text-sm font-semibold
+                       text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2
+                       focus:ring-offset-2 focus:ring-brand-600 transition-colors">
+          Enable two-factor authentication
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

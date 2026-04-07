@@ -1,0 +1,12 @@
+{% extends "admin/login.html" %}
+{# Injects branding into the unfold/django admin login page. #}
+
+{% block content_title %}
+  <div style="text-align:center;margin-bottom:1.5rem;">
+    <svg style="width:40px;height:40px;color:#0284c7;display:inline-block;" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+    </svg>
+    <h1 style="font-size:1.25rem;font-weight:700;margin:0.5rem 0 0;">Django SaaS</h1>
+    <p style="font-size:0.875rem;color:#6b7280;margin:0.25rem 0 0;">Staff administration portal</p>
+  </div>
+{% endblock %}

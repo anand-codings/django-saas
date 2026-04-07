@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+{# Master layout — all first-party server-rendered pages extend this. #}
+{# Blocks: title, meta_description, extra_head, content, extra_js #}
+<html lang="{{ LANGUAGE_CODE|default:'en' }}" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="{% block meta_description %}A modern multi-tenant SaaS platform.{% endblock %}" />
+  <title>{% block title %}Django SaaS{% endblock %} — Django SaaS</title>
+
+  {# Tailwind via CDN — replace with compiled bundle in production #}
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#f0f9ff', 500: '#0ea5e9', 600: '#0284c7', 700: '#0369a1' },
+          },
+        },
+      },
+    }
+  </script>
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="h-full bg-gray-50 text-gray-900 antialiased">
+
+  {# ── Navigation ─────────────────────────────────────────────────────────── #}
+  <nav class="bg-white border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+        <a href="/" class="flex items-center gap-2 font-bold text-brand-600 text-lg">
+          <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+          Django SaaS
+        </a>
+
+        <div class="flex items-center gap-4 text-sm font-medium text-gray-600">
+          {% block nav_links %}
+            <a href="/blog/" class="hover:text-brand-600 transition-colors">Blog</a>
+            <a href="/developer/" class="hover:text-brand-600 transition-colors">Docs</a>
+            {% if user.is_authenticated %}
+              <a href="/accounts/logout/" class="hover:text-brand-600 transition-colors">Sign out</a>
+            {% else %}
+              <a href="/accounts/login/" class="hover:text-brand-600 transition-colors">Sign in</a>
+              <a href="/accounts/signup/"
+                 class="bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700 transition-colors">
+                Get started
+              </a>
+            {% endif %}
+          {% endblock %}
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  {# ── Flash messages ──────────────────────────────────────────────────────── #}
+  {% if messages %}
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 space-y-2" role="alert" aria-live="polite">
+      {% for message in messages %}
+        <div class="flex items-start gap-3 rounded-lg px-4 py-3 text-sm
+          {% if message.tags == 'error' %}bg-red-50 text-red-800 border border-red-200
+          {% elif message.tags == 'success' %}bg-green-50 text-green-800 border border-green-200
+          {% elif message.tags == 'warning' %}bg-yellow-50 text-yellow-800 border border-yellow-200
+          {% else %}bg-blue-50 text-blue-800 border border-blue-200{% endif %}">
+          <span>{{ message }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {# ── Page content ────────────────────────────────────────────────────────── #}
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    {% block content %}{% endblock %}
+  </main>
+
+  {# ── Footer ──────────────────────────────────────────────────────────────── #}
+  <footer class="border-t border-gray-200 mt-auto bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500">
+        <p>&copy; {% now "Y" %} Django SaaS. All rights reserved.</p>
+        <nav class="flex gap-6">
+          <a href="/pages/privacy/" class="hover:text-gray-700">Privacy</a>
+          <a href="/pages/terms/" class="hover:text-gray-700">Terms</a>
+          <a href="/pages/security/" class="hover:text-gray-700">Security</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

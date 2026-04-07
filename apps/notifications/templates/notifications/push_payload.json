@@ -1,0 +1,13 @@
+{
+  "title": "{{ title|escapejs }}",
+  "body": "{{ body|escapejs }}",
+  "icon": "{{ site_url }}/static/img/icon-192.png",
+  "badge": "{{ site_url }}/static/img/badge-72.png",
+  "data": {
+    "url": "{{ action_url|default:site_url|escapejs }}",
+    "notification_id": "{{ notification_id }}",
+    "type": "{{ notification_type|escapejs }}"
+  }{% if tag %},
+  "tag": "{{ tag|escapejs }}"{% endif %}{% if require_interaction %},
+  "requireInteraction": true{% endif %}
+}

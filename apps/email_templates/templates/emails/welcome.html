@@ -1,0 +1,18 @@
+{% extends "emails/_base.html" %}
+
+{% block subject %}Welcome to Django SaaS{% endblock %}
+
+{% block email_body %}
+  <h1>Welcome{% if first_name %}, {{ first_name }}{% endif %}! 🎉</h1>
+  <p>Your account is ready. Here's what you can do next:</p>
+  <ul style="margin:0 0 12px;padding-left:20px;line-height:2;font-size:15px;color:#374151;">
+    <li>Complete your <a href="{{ dashboard_url }}/onboarding/">profile setup</a></li>
+    <li>Invite your team</li>
+    <li>Explore the <a href="{{ site_url }}/developer/">API docs</a></li>
+  </ul>
+  <a href="{{ dashboard_url }}" class="btn">Go to your dashboard &rarr;</a>
+  <hr class="divider" style="margin-top:32px;" />
+  <p style="font-size:13px;color:#6b7280;margin:0;">
+    Questions? Reply to this email — we read everything.
+  </p>
+{% endblock %}

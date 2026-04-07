@@ -1,0 +1,30 @@
+{# Welcome email — sent after account creation. #}
+{# Variables: first_name, site_url, dashboard_url, unsubscribe_url, site_name, site_address #}
+{% extends "mjml/_base.mjml" %}
+
+{% block email_body %}
+  <mj-text>
+    <h1 style="margin:0 0 16px;font-size:24px;font-weight:700;color:#111827;">
+      Welcome{% if first_name %}, {{ first_name }}{% endif %}! 🎉
+    </h1>
+    <p style="margin:0 0 12px;">
+      Your account is ready. Here's what you can do next:
+    </p>
+  </mj-text>
+
+  <mj-text padding-top="0">
+    <ul style="margin:0;padding-left:20px;line-height:2;">
+      <li>Complete your <a href="{{ dashboard_url }}/onboarding/">profile setup</a></li>
+      <li>Invite your team</li>
+      <li>Explore the <a href="{{ site_url }}/developer/">API docs</a></li>
+    </ul>
+  </mj-text>
+
+  <mj-button href="{{ dashboard_url }}" align="left" margin="24px 0 0">
+    Go to your dashboard →
+  </mj-button>
+
+  <mj-text padding-top="24px" color="#6b7280" font-size="13px">
+    Questions? Reply to this email — we read everything.
+  </mj-text>
+{% endblock %}
