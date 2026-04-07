@@ -447,6 +447,11 @@ STRIPE_TEST_SECRET_KEY = env("STRIPE_TEST_SECRET_KEY", default="")
 STRIPE_LIVE_MODE = env.bool("STRIPE_LIVE_MODE", default=False)
 DJSTRIPE_WEBHOOK_SECRET = env("DJSTRIPE_WEBHOOK_SECRET", default="")
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
+DJSTRIPE_SUBSCRIBER_MODEL = "accounts.User"
+
+# Checkout redirect URLs
+CHECKOUT_SUCCESS_URL = env("CHECKOUT_SUCCESS_URL", default="http://localhost:3000/billing/success?session_id={CHECKOUT_SESSION_ID}")
+CHECKOUT_CANCEL_URL = env("CHECKOUT_CANCEL_URL", default="http://localhost:3000/billing/cancel")
 
 # --------------------------------------------------------------------------
 # Security

@@ -50,24 +50,17 @@ def interval_label(interval, interval_count=1):
 def current_plan(context):
     """Return the active dj-stripe Subscription for the request user, or None.
 
+    Resolves via BillingCustomer → djstripe.Customer → djstripe.Subscription.
+
     Usage: {% current_plan as sub %} {% if sub %}...{% endif %}
     """
     request = context.get("request")
     if not request or not request.user.is_authenticated:
         return None
     try:
-        from djstripe.models import Subscription
-        customer = getattr(request.user, "djstripe_customers", None)
-        if customer is None:
-            return None
-        return (
-            Subscription.objects.filter(
-                customer__subscriber=request.user,
-                status__in=["active", "trialing"],
-            )
-            .select_related("plan", "plan__product")
-            .first()
-        )
+        from apps.billing.services import get_active_subscription
+
+        return get_active_subscription(user=request.user)
     except Exception:
         return None
 

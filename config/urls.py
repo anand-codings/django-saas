@@ -29,6 +29,9 @@ urlpatterns = [
     # Django Ninja API
     path("api/ninja/", ninja_api.urls),
 
+    # Stripe webhooks (dj-stripe)
+    path("stripe/", include("djstripe.urls", namespace="djstripe")),
+
     # Auth
     path("accounts/", include("allauth.urls")),
     path("api/auth/", include("dj_rest_auth.urls")),
