@@ -1,0 +1,35 @@
+{% spaceless %}
+<?xml version="1.0" encoding="UTF-8"?>
+{# RSS 2.0 feed — register this template with Django's SyndicationFeed or serve directly. #}
+{# Context: site_name, site_url, feed_description, posts                                 #}
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>{{ site_name }} Blog</title>
+    <link>{{ site_url }}/blog/</link>
+    <description>{{ feed_description|default:"Articles, tutorials, and product updates." }}</description>
+    <language>en-us</language>
+    <lastBuildDate>{% now "r" %}</lastBuildDate>
+    <atom:link href="{{ site_url }}/blog/feed.xml" rel="self" type="application/rss+xml"/>
+    <image>
+      <url>{{ site_url }}/static/img/logo-rss.png</url>
+      <title>{{ site_name }}</title>
+      <link>{{ site_url }}</link>
+    </image>
+
+    {% for post in posts %}
+    <item>
+      <title>{{ post.title|escape }}</title>
+      <link>{{ site_url }}{{ post.get_absolute_url }}</link>
+      <guid isPermaLink="true">{{ site_url }}{{ post.get_absolute_url }}</guid>
+      <pubDate>{{ post.published_at|date:"r" }}</pubDate>
+      {% if post.author %}<author>{{ post.author.email }} ({{ post.author.get_full_name|default:post.author.email }})</author>{% endif %}
+      {% if post.category %}<category>{{ post.category|escape }}</category>{% endif %}
+      <description>{{ post.excerpt|default:post.title|escape }}</description>
+      {% if post.body_html %}
+      <content:encoded><![CDATA[{{ post.body_html }}]]></content:encoded>
+      {% endif %}
+    </item>
+    {% endfor %}
+  </channel>
+</rss>
+{% endspaceless %}

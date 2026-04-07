@@ -1,0 +1,13 @@
+{# Rendered by the {% user_avatar %} inclusion tag from shared/templatetags/saas_tags.py #}
+{% if user and user.avatar %}
+  <img src="{{ user.avatar.url }}"
+       alt="{{ user.get_full_name|default:user.email }}"
+       class="{{ size_class }} rounded-full object-cover flex-shrink-0"
+       loading="lazy" />
+{% else %}
+  <span class="{{ size_class }} rounded-full bg-brand-100 text-brand-700 font-bold
+               flex items-center justify-center flex-shrink-0 select-none"
+        aria-hidden="true">
+    {{ initials_val }}
+  </span>
+{% endif %}

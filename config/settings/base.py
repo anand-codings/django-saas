@@ -83,7 +83,7 @@ THIRD_PARTY_APPS = [
     "health_check.contrib.redis",
     # Monitoring
     "django_prometheus",
-    # Admin
+    # Admin (unfold must be BEFORE django.contrib.admin — see INSTALLED_APPS order)
     "unfold",
     "unfold.contrib.filters",
     "unfold.contrib.forms",
@@ -203,7 +203,13 @@ LOCAL_APPS = [
     "apps.ai_usage",
 ]
 
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+# Unfold admin theme must be before django.contrib.admin for template override
+INSTALLED_APPS = (
+    ["unfold", "unfold.contrib.filters", "unfold.contrib.forms"]
+    + DJANGO_APPS
+    + [app for app in THIRD_PARTY_APPS if not app.startswith("unfold")]
+    + LOCAL_APPS
+)
 
 # --------------------------------------------------------------------------
 # Middleware
@@ -348,6 +354,7 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "Comprehensive SaaS platform API",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
+    "SCHEMA_PATH_PREFIX": "/api/",
 }
 
 # --------------------------------------------------------------------------

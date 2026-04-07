@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{# Multi-step onboarding wizard. #}
+{# Context: steps (list of {id, label, completed}), current_step (id),        #}
+{#          form, progress_pct (0-100)                                          #}
+
+{% block title %}Setup — {{ current_step_label|default:"Onboarding" }}{% endblock %}
+
+{% block nav_links %}
+  {# Hide standard nav during onboarding to reduce distraction #}
+  <a href="/support/" class="text-sm text-gray-500 hover:text-gray-700">Need help?</a>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+  {# Progress bar #}
+  <div class="mb-8">
+    <div class="flex justify-between text-xs text-gray-500 mb-2">
+      <span>Setup progress</span>
+      <span>{{ progress_pct|default:0 }}%</span>
+    </div>
+    <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+      <div class="h-full bg-brand-600 rounded-full transition-all duration-500"
+           style="width: {{ progress_pct|default:0 }}%"></div>
+    </div>
+  </div>
+
+  {# Step indicator #}
+  <nav class="flex items-center gap-2 mb-8 overflow-x-auto pb-2" aria-label="Setup steps">
+    {% for step in steps %}
+      <div class="flex items-center gap-2 flex-shrink-0">
+        <div class="flex items-center gap-2">
+          <span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0
+            {% if step.completed %}bg-green-500 text-white
+            {% elif step.id == current_step %}bg-brand-600 text-white
+            {% else %}bg-gray-200 text-gray-500{% endif %}">
+            {% if step.completed %}
+              <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+            {% else %}
+              {{ forloop.counter }}
+            {% endif %}
+          </span>
+          <span class="text-sm {% if step.id == current_step %}font-semibold text-gray-900{% else %}text-gray-500{% endif %}">
+            {{ step.label }}
+          </span>
+        </div>
+        {% if not forloop.last %}
+          <div class="w-6 h-px bg-gray-300 flex-shrink-0"></div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </nav>
+
+  {# Step card #}
+  <div class="bg-white rounded-xl border border-gray-200 shadow-sm">
+    <div class="px-8 pt-8 pb-2 border-b border-gray-100">
+      <h1 class="text-2xl font-bold text-gray-900">{{ current_step_label }}</h1>
+      {% if current_step_description %}
+        <p class="mt-1 text-gray-500 text-sm">{{ current_step_description }}</p>
+      {% endif %}
+    </div>
+
+    <div class="p-8">
+      <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="step" value="{{ current_step }}" />
+
+        {# Render form fields — override this block per step if needed #}
+        {% if form %}
+          <div class="space-y-5">
+            {% for field in form %}
+              <div>
+                <label for="{{ field.id_for_label }}"
+                       class="block text-sm font-medium text-gray-700 mb-1">
+                  {{ field.label }}
+                  {% if field.field.required %}<span class="text-red-500 ml-0.5">*</span>{% endif %}
+                </label>
+                {{ field }}
+                {% if field.help_text %}
+                  <p class="mt-1 text-xs text-gray-400">{{ field.help_text }}</p>
+                {% endif %}
+                {% for error in field.errors %}
+                  <p class="mt-1 text-xs text-red-600">{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          {# Step has no form — show a completion message and allow continuation #}
+          <div class="py-6 text-center text-gray-500">
+            <p>{% block step_content %}Complete this step to continue.{% endblock %}</p>
+          </div>
+        {% endif %}
+
+        <div class="mt-8 flex justify-between items-center">
+          {% if show_skip %}
+            <button type="submit" name="action" value="skip"
+                    class="text-sm text-gray-400 hover:text-gray-600">
+              Skip for now
+            </button>
+          {% else %}
+            <span></span>
+          {% endif %}
+
+          <button type="submit" name="action" value="next"
+                  class="bg-brand-600 text-white px-6 py-2.5 rounded-lg text-sm font-semibold
+                         hover:bg-brand-700 transition-colors">
+            {% if is_last_step %}Finish setup{% else %}Continue →{% endif %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

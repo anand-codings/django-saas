@@ -1,0 +1,6 @@
+{# Rendered by {% plan_badge %} from billing_tags.py #}
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
+             {% if color == 'brand' %}bg-brand-100 text-brand-700
+             {% else %}bg-gray-100 text-gray-600{% endif %}">
+  {{ plan_name }}
+</span>

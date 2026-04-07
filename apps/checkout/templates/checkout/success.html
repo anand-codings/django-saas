@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{# Post-payment Stripe redirect target. #}
+{# Context: session (Stripe checkout session), plan (optional), organization (optional) #}
+
+{% block title %}Payment successful{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto py-16 text-center">
+  <div class="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
+    <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+    </svg>
+  </div>
+
+  <h1 class="text-3xl font-bold text-gray-900 mb-3">Payment successful!</h1>
+  <p class="text-gray-500 mb-2">
+    {% if plan %}
+      You're now on the <strong class="text-gray-800">{{ plan.name }}</strong> plan.
+    {% else %}
+      Your payment has been processed.
+    {% endif %}
+  </p>
+  <p class="text-sm text-gray-400 mb-10">A receipt has been emailed to you.</p>
+
+  {# What's next #}
+  <div class="bg-gray-50 rounded-xl border border-gray-200 p-6 text-left mb-8">
+    <h2 class="font-semibold text-gray-800 mb-4">What's next</h2>
+    <ul class="space-y-3 text-sm text-gray-600">
+      <li class="flex items-start gap-3">
+        <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+        Your subscription is active immediately.
+      </li>
+      <li class="flex items-start gap-3">
+        <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+        Invite your team under <strong>Settings → Members</strong>.
+      </li>
+      <li class="flex items-start gap-3">
+        <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+        Check the <a href="/developer/" class="text-brand-600 hover:underline">developer portal</a> to get your API key.
+      </li>
+    </ul>
+  </div>
+
+  <div class="flex flex-wrap gap-3 justify-center">
+    <a href="/dashboard/"
+       class="bg-brand-600 text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-brand-700 transition-colors">
+      Go to dashboard
+    </a>
+    <a href="/api/v1/billing/"
+       class="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg text-sm font-semibold hover:bg-gray-50 transition-colors">
+      View billing
+    </a>
+  </div>
+</div>
+{% endblock %}
