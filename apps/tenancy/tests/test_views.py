@@ -54,3 +54,73 @@ class SuperuserCrossTenantAuditTest(TestCase):
             mock_logger.info.assert_called_once()
             call_args = mock_logger.info.call_args
             self.assertEqual(call_args[0][0], "superuser_cross_tenant_access")
+
+
+# ---------------------------------------------------------------------------
+# pytest-style API tests for TenantViewSet (using RequestFactory since
+# tenancy URLs are not in config/urls.py)
+# ---------------------------------------------------------------------------
+
+import pytest
+from rest_framework import status as http_status
+from rest_framework.test import APIRequestFactory
+
+from apps.tenancy.models import TenantMembership
+from apps.tenancy.views import TenantViewSet
+from conftest import TenantFactory, TenantMembershipFactory, UserFactory
+
+
+class TestTenantViewSetAPI:
+    def test_list_user_tenants(self):
+        user = UserFactory()
+        tenant = TenantFactory()
+        TenantMembershipFactory(user=user, tenant=tenant)
+        TenantFactory()  # user is not a member
+
+        factory = APIRequestFactory()
+        request = factory.get("/tenants/")
+        request.user = user
+        view = TenantViewSet.as_view({"get": "list"})
+        response = view(request)
+        response.render()
+        assert response.status_code == http_status.HTTP_200_OK
+        results = response.data.get("results", response.data) if isinstance(response.data, dict) else response.data
+        ids = [str(t["id"]) for t in results]
+        assert str(tenant.pk) in ids
+
+    def test_create_tenant(self):
+        user = UserFactory()
+        factory = APIRequestFactory()
+        request = factory.post("/tenants/", {"name": "New Tenant", "slug": "new-tenant"})
+        request.user = user
+        view = TenantViewSet.as_view({"post": "create"})
+        response = view(request)
+        assert response.status_code == http_status.HTTP_201_CREATED
+        assert TenantMembership.objects.filter(user=user, role="owner").exists()
+
+    def test_soft_delete(self):
+        user = UserFactory()
+        tenant = TenantFactory(status="active")
+        TenantMembershipFactory(user=user, tenant=tenant)
+
+        factory = APIRequestFactory()
+        request = factory.delete(f"/tenants/{tenant.pk}/")
+        request.user = user
+        view = TenantViewSet.as_view({"delete": "destroy"})
+        response = view(request, id=tenant.pk)
+        assert response.status_code == http_status.HTTP_204_NO_CONTENT
+        tenant.refresh_from_db()
+        assert tenant.status == "inactive"
+
+    def test_members_action(self):
+        user = UserFactory()
+        tenant = TenantFactory()
+        TenantMembershipFactory(user=user, tenant=tenant)
+
+        factory = APIRequestFactory()
+        request = factory.get(f"/tenants/{tenant.pk}/members/")
+        request.user = user
+        view = TenantViewSet.as_view({"get": "members"})
+        response = view(request, id=tenant.pk)
+        assert response.status_code == http_status.HTTP_200_OK
+        assert len(response.data) == 1

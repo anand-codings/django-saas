@@ -282,7 +282,14 @@ ASGI_APPLICATION = "config.asgi.application"
 # --------------------------------------------------------------------------
 
 DATABASES = {
-    "default": env.db("DATABASE_URL", default="postgres://postgres:postgres@localhost:5432/django_saas"),
+    "default": {
+        **env.db("DATABASE_URL", default="postgres://postgres:postgres@localhost:5432/django_saas"),
+        "CONN_MAX_AGE": env.int("CONN_MAX_AGE", default=600),
+        "CONN_HEALTH_CHECKS": True,
+        "OPTIONS": {
+            "connect_timeout": 5,
+        },
+    },
 }
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -406,6 +413,28 @@ CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "UTC"
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
+# Task safety & reliability
+CELERY_TASK_ACKS_LATE = True
+CELERY_TASK_REJECT_ON_WORKER_LOST = True
+CELERY_TASK_TRACK_STARTED = True
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+CELERY_TASK_COMPRESSION = "gzip"
+
+# Time limits (seconds)
+CELERY_TASK_TIME_LIMIT = 300
+CELERY_TASK_SOFT_TIME_LIMIT = 240
+
+# Retry defaults
+CELERY_TASK_DEFAULT_RETRY_DELAY = 60
+CELERY_TASK_MAX_RETRIES = 3
+
+# Queue routing
+CELERY_TASK_DEFAULT_QUEUE = "default"
+CELERY_TASK_ROUTES = {
+    "apps.billing.tasks.*": {"queue": "billing"},
+    "apps.mailer.tasks.*": {"queue": "mailer"},
+}
+
 # --------------------------------------------------------------------------
 # Channels (WebSockets)
 # --------------------------------------------------------------------------
@@ -447,6 +476,11 @@ STRIPE_TEST_SECRET_KEY = env("STRIPE_TEST_SECRET_KEY", default="")
 STRIPE_LIVE_MODE = env.bool("STRIPE_LIVE_MODE", default=False)
 DJSTRIPE_WEBHOOK_SECRET = env("DJSTRIPE_WEBHOOK_SECRET", default="")
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
+DJSTRIPE_SUBSCRIBER_MODEL = "accounts.User"
+
+# Checkout redirect URLs
+CHECKOUT_SUCCESS_URL = env("CHECKOUT_SUCCESS_URL", default="http://localhost:3000/billing/success?session_id={CHECKOUT_SESSION_ID}")
+CHECKOUT_CANCEL_URL = env("CHECKOUT_CANCEL_URL", default="http://localhost:3000/billing/cancel")
 
 # --------------------------------------------------------------------------
 # Security

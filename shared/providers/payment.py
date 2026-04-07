@@ -1,6 +1,11 @@
 """Abstract payment provider interface.
 
 Primary implementation: Stripe. Abstract for future providers (Paddle, Braintree, LemonSqueezy).
+
+NOTE: The billing system now uses dj-stripe as its source of truth. Stripe API calls
+are made directly in apps.billing.services rather than through this abstraction.
+This interface is retained for potential future multi-provider support but is not
+currently implemented or used by the billing app.
 """
 
 from abc import ABC, abstractmethod

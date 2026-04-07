@@ -6,3 +6,6 @@ class BillingConfig(AppConfig):
     name = "apps.billing"
     label = "billing"
     verbose_name = "Subscription management, payment processing, and invoicing with provider abstraction"
+
+    def ready(self):
+        import apps.billing.webhooks  # noqa: F401 — registers dj-stripe signal handlers

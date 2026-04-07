@@ -81,6 +81,10 @@ dependencies = [
     "django-prometheus>=2.3",
     "structlog>=24.4",
     "opentelemetry-instrumentation-django>=0.50",
+    "opentelemetry-sdk>=1.28",
+    "opentelemetry-exporter-otlp-proto-grpc>=1.28",
+    "opentelemetry-instrumentation-celery>=0.50",
+    "opentelemetry-instrumentation-redis>=0.50",
 
     # Admin
     "django-unfold>=0.42",
@@ -161,6 +165,7 @@ dev = [
     "django-debug-toolbar>=4.4",
     "ipython>=8.30",
     "pre-commit>=4.0",
+    "pytest-factoryboy>=2.7",
 ]
 
 [tool.hatch.build.targets.wheel]

@@ -1,9 +1,8 @@
 """Plan/tier definitions, feature entitlements, and usage quotas."""
 
 from django.db import models
-
 from shared.models.base import BaseModel
-from shared.types.enums import Currency, Interval, Status
+from shared.types.enums import Currency, Status
 
 
 class Plan(BaseModel):
@@ -39,6 +38,15 @@ class Plan(BaseModel):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def from_stripe_price(cls, price_id):
+        """Resolve a Plan from a Stripe price ID, or None."""
+        from django.db.models import Q
+
+        return cls.objects.filter(
+            Q(stripe_monthly_price_id=price_id) | Q(stripe_yearly_price_id=price_id)
+        ).first()
 
 
 class PlanFeature(BaseModel):
