@@ -13,6 +13,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
+# Non-root user
+RUN groupadd --gid 1000 appuser && \
+    useradd --uid 1000 --gid appuser --shell /bin/bash --create-home appuser
+
 # Python dependencies
 COPY pyproject.toml ./
 RUN pip install --no-cache-dir --upgrade pip && \
@@ -23,6 +27,9 @@ COPY . .
 
 # Collect static files
 RUN python manage.py collectstatic --noinput --settings=config.settings.prod 2>/dev/null || true
+
+RUN chown -R appuser:appuser /app
+USER appuser
 
 EXPOSE 16000
 

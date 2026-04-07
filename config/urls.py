@@ -48,6 +48,7 @@ urlpatterns = [
 
     # Health checks
     path("health/", HealthCheckView.as_view(), name="health-check"),
+    path("health/", include("apps.health.urls")),
 
     # Django Prometheus (staff-only)
     path("metrics/", staff_member_required(ExportToDjangoView), name="prometheus-metrics"),
