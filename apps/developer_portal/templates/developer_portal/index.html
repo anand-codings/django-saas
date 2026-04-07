@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Developer Portal{% endblock %}
+{% block meta_description %}Everything you need to build on the Django SaaS API: references, SDKs, and an interactive sandbox.{% endblock %}
+
+{% block content %}
+{# Hero #}
+<div class="text-center py-16 border-b border-gray-200 mb-12">
+  <span class="inline-block text-xs font-semibold uppercase tracking-widest text-brand-600 mb-3">
+    Developer Portal
+  </span>
+  <h1 class="text-4xl font-black text-gray-900 sm:text-5xl">Build on Django SaaS</h1>
+  <p class="mt-4 text-lg text-gray-500 max-w-2xl mx-auto">
+    Full-featured REST &amp; Ninja APIs, SDKs, webhooks, OAuth2, and an interactive sandbox.
+  </p>
+  <div class="mt-8 flex flex-wrap gap-3 justify-center">
+    <a href="{% url 'developer_portal:getting_started' %}"
+       class="bg-brand-600 text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-brand-700 transition-colors">
+      Quick start guide
+    </a>
+    <a href="{% url 'developer_portal:api_reference' %}"
+       class="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg text-sm font-semibold hover:bg-gray-50 transition-colors">
+      API reference
+    </a>
+  </div>
+</div>
+
+{# Feature cards #}
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  {% for card in feature_cards %}
+    <a href="{{ card.url }}"
+       class="group block bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md hover:border-brand-200 transition-all">
+      <div class="text-2xl mb-3">{{ card.icon }}</div>
+      <h3 class="font-semibold text-gray-900 group-hover:text-brand-600 transition-colors mb-1">
+        {{ card.title }}
+      </h3>
+      <p class="text-sm text-gray-500">{{ card.description }}</p>
+    </a>
+  {% empty %}
+    {# Static fallback cards #}
+    {% for card in ""|make_list %}{% endfor %}
+    <a href="{% url 'developer_portal:getting_started' %}"
+       class="group block bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md hover:border-brand-200 transition-all">
+      <div class="text-2xl mb-3">🚀</div>
+      <h3 class="font-semibold text-gray-900 group-hover:text-brand-600 transition-colors mb-1">Getting started</h3>
+      <p class="text-sm text-gray-500">Set up your API key and make your first request in minutes.</p>
+    </a>
+    <a href="{% url 'developer_portal:api_reference' %}"
+       class="group block bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md hover:border-brand-200 transition-all">
+      <div class="text-2xl mb-3">📖</div>
+      <h3 class="font-semibold text-gray-900 group-hover:text-brand-600 transition-colors mb-1">API reference</h3>
+      <p class="text-sm text-gray-500">Browse all endpoints, parameters, and response schemas.</p>
+    </a>
+    <a href="{% url 'developer_portal:sandbox' %}"
+       class="group block bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md hover:border-brand-200 transition-all">
+      <div class="text-2xl mb-3">🧪</div>
+      <h3 class="font-semibold text-gray-900 group-hover:text-brand-600 transition-colors mb-1">Interactive sandbox</h3>
+      <p class="text-sm text-gray-500">Try API calls live in your browser with your own credentials.</p>
+    </a>
+    <a href="/api/docs/"
+       class="group block bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md hover:border-brand-200 transition-all">
+      <div class="text-2xl mb-3">🔍</div>
+      <h3 class="font-semibold text-gray-900 group-hover:text-brand-600 transition-colors mb-1">OpenAPI / Swagger</h3>
+      <p class="text-sm text-gray-500">Machine-readable OpenAPI 3.1 spec. Import into Postman or Insomnia.</p>
+    </a>
+    <a href="/api/ninja/"
+       class="group block bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md hover:border-brand-200 transition-all">
+      <div class="text-2xl mb-3">⚡</div>
+      <h3 class="font-semibold text-gray-900 group-hover:text-brand-600 transition-colors mb-1">Ninja API</h3>
+      <p class="text-sm text-gray-500">High-performance endpoints built with Django Ninja + Pydantic.</p>
+    </a>
+    <a href="/oauth/"
+       class="group block bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md hover:border-brand-200 transition-all">
+      <div class="text-2xl mb-3">🔐</div>
+      <h3 class="font-semibold text-gray-900 group-hover:text-brand-600 transition-colors mb-1">OAuth2 &amp; Auth</h3>
+      <p class="text-sm text-gray-500">OAuth2 authorization, JWT tokens, API keys, and SSO/SAML guides.</p>
+    </a>
+  {% endfor %}
+</div>
+{% endblock %}

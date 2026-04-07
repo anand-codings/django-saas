@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{# Renders a CMS/marketing page by slug. #}
+{# Context: page (with .title, .body_html or .body, .meta_description, .updated_at) #}
+
+{% block title %}{{ page.title }}{% endblock %}
+{% block meta_description %}{{ page.meta_description|default:page.title }}{% endblock %}
+
+{% block content %}
+<article class="max-w-3xl mx-auto">
+  <header class="mb-10 pb-8 border-b border-gray-200">
+    <h1 class="text-4xl font-bold text-gray-900 leading-tight">{{ page.title }}</h1>
+    {% if page.updated_at %}
+      <p class="mt-3 text-sm text-gray-400">Last updated {{ page.updated_at|date:"F j, Y" }}</p>
+    {% endif %}
+  </header>
+
+  <div class="prose prose-gray max-w-none
+              prose-headings:font-semibold prose-headings:text-gray-900
+              prose-a:text-brand-600 prose-a:no-underline hover:prose-a:underline
+              prose-code:bg-gray-100 prose-code:rounded prose-code:px-1
+              prose-pre:bg-gray-900 prose-pre:rounded-xl">
+    {% if page.body_html %}
+      {{ page.body_html|safe }}
+    {% else %}
+      {{ page.body|linebreaks }}
+    {% endif %}
+  </div>
+</article>
+{% endblock %}

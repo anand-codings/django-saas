@@ -1,0 +1,60 @@
+{% load i18n %}
+{# Custom admin dashboard — surfaced at /admin/ when UNFOLD["DASHBOARD_CALLBACK"] points here. #}
+{# Drop-in stats + quick-link widgets; extend with real QuerySet data in the view callback.    #}
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+  {% for stat in dashboard_stats %}
+    <div class="bg-white rounded-xl border border-gray-200 p-5">
+      <p class="text-sm text-gray-500 mb-1">{{ stat.label }}</p>
+      <p class="text-3xl font-bold text-gray-900">{{ stat.value }}</p>
+      {% if stat.change %}
+        <p class="mt-1 text-xs {% if stat.change > 0 %}text-green-600{% else %}text-red-500{% endif %}">
+          {% if stat.change > 0 %}↑{% else %}↓{% endif %} {{ stat.change|floatformat:1 }}% vs last period
+        </p>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  {# Recent signups #}
+  <div class="bg-white rounded-xl border border-gray-200 p-5">
+    <h3 class="font-semibold text-gray-800 mb-4">Recent sign-ups</h3>
+    <ul class="divide-y divide-gray-100">
+      {% for user in recent_users %}
+        <li class="py-2.5 flex justify-between text-sm">
+          <span class="text-gray-800 font-medium">{{ user.email }}</span>
+          <span class="text-gray-400">{{ user.date_joined|timesince }} ago</span>
+        </li>
+      {% empty %}
+        <li class="py-4 text-sm text-gray-400 text-center">No recent sign-ups.</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  {# System health #}
+  <div class="bg-white rounded-xl border border-gray-200 p-5">
+    <h3 class="font-semibold text-gray-800 mb-4">System health</h3>
+    <ul class="space-y-2 text-sm">
+      {% for service in health_checks %}
+        <li class="flex items-center justify-between">
+          <span class="text-gray-700">{{ service.name }}</span>
+          <span class="inline-flex items-center gap-1.5 font-medium
+            {% if service.status == 'ok' %}text-green-600{% elif service.status == 'warning' %}text-amber-600{% else %}text-red-600{% endif %}">
+            <span class="w-2 h-2 rounded-full
+              {% if service.status == 'ok' %}bg-green-500{% elif service.status == 'warning' %}bg-amber-500{% else %}bg-red-500{% endif %}">
+            </span>
+            {{ service.status|upper }}
+          </span>
+        </li>
+      {% empty %}
+        <li class="text-gray-400 text-center py-4">Health data not available.</li>
+      {% endfor %}
+    </ul>
+    <div class="mt-4 pt-4 border-t border-gray-100">
+      <a href="/health/" class="text-xs text-brand-600 hover:text-brand-700 font-medium">
+        View full health report →
+      </a>
+    </div>
+  </div>
+</div>

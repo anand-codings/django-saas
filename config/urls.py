@@ -22,9 +22,9 @@ urlpatterns = [
     # Admin
     path("admin/", admin.site.urls),
 
-    # API Documentation (staff-only in production)
-    path("api/schema/", staff_member_required(SpectacularAPIView.as_view()), name="schema"),
-    path("api/docs/", staff_member_required(SpectacularSwaggerView.as_view(url_name="schema")), name="swagger-ui"),
+    # API Documentation
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
 
     # Django Ninja API
     path("api/ninja/", ninja_api.urls),
